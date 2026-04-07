@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Projects Loading</title>
+    <style>
+        body { background: #111; color: white; font-family: monospace; padding: 20px; }
+        .project { background: #222; padding: 15px; margin: 10px 0; border-radius: 8px; }
+        .error { color: #ff4444; }
+        .success { color: #44ff44; }
+    </style>
+</head>
+<body>
+    <h1>Projects Loading Test</h1>
+    <div id="status">Testing...</div>
+    <div id="results"></div>
+
+    <script>
+        const FALLBACK_REPOS = [
+            {
+                name: 'NAV-Project-Management',
+                description: 'Project Management System for NAV Solutions',
+                html_url: 'https://github.com/Mj1031/NAV-Project-Management',
+                updated_at: '2025-03-06T04:20:57Z'
+            },
+            {
+                name: 'Tableau-C19',
+                description: 'Covid 19 Dashboard',
+                html_url: 'https://github.com/Mj1031/Tableau-C19',
+                updated_at: '2025-03-06T04:15:03Z'
+            },
+            {
+                name: 'PowerBI-CC',
+                description: 'Call Center Dashboard',
+                html_url: 'https://github.com/Mj1031/PowerBI-CC',
+                updated_at: '2025-03-06T04:14:25Z'
+            },
+            {
+                name: 'PowerBI-HR',
+                description: 'HR Data Dashboard',
+                html_url: 'https://github.com/Mj1031/PowerBI-HR',
+                updated_at: '2025-03-06T04:12:45Z'
+            },
+            {
+                name: 'Tableau-LD',
+                description: 'Layoff Demographics Project',
+                html_url: 'https://github.com/Mj1031/Tableau-LD',
+                updated_at: '2025-03-06T04:11:06Z'
+            },
+            {
+                name: 'Tableau-ISD',
+                description: 'International Student Demographics',
+                html_url: 'https://github.com/Mj1031/Tableau-ISD',
+                updated_at: '2025-03-06T04:10:20Z'
+            },
+            {
+                name: 'Hospital-Management-System',
+                description: 'Hospital Management System',
+                html_url: 'https://github.com/Mj1031/Hospital-Management-System',
+                updated_at: '2025-03-06T04:09:24Z'
+            }
+        ];
+
+        async function testLoad() {
+            const statusDiv = document.getElementById('status');
+            const resultsDiv = document.getElementById('results');
+
+            // Test 1: Check if we can fetch from GitHub API
+            statusDiv.innerHTML = '1. Testing GitHub API...';
+            try {
+                const res = await fetch('https://api.github.com/users/Mj1031/repos?per_page=100&sort=updated');
+                if (res.ok) {
+                    const repos = await res.json();
+                    statusDiv.innerHTML += `<br><span class="success">✓ GitHub API works! Found ${repos.length} repos</span>`;
+                    displayRepos(repos.filter(r => r.name !== 'Mj1031'));
+                } else {
+                    throw new Error('API returned ' + res.status);
+                }
+            } catch (err) {
+                statusDiv.innerHTML += `<br><span class="error">✗ GitHub API failed: ${err.message}</span>`;
+                statusDiv.innerHTML += `<br>2. Using fallback data...`;
+                displayRepos(FALLBACK_REPOS);
+            }
+        }
+
+        function displayRepos(repos) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<h2>Projects Found: ' + repos.length + '</h2>';
+
+            repos.forEach((repo, i) => {
+                resultsDiv.innerHTML += `
+                    <div class="project">
+                        <strong>${i + 1}. ${repo.name}</strong><br>
+                        ${repo.description || 'No description'}<br>
+                        <a href="${repo.html_url}" target="_blank" style="color: #4af;">View on GitHub</a>
+                    </div>
+                `;
+            });
+        }
+
+        testLoad();
+    </script>
+</body>
+</html>

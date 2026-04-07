@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Projects</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white p-8">
+    <h1 class="text-3xl mb-4">Debug: Checking Projects Page Elements</h1>
+
+    <button onclick="runDiagnostics()" class="bg-blue-500 px-4 py-2 rounded mb-4">Run Diagnostics</button>
+    <button onclick="window.location.href='projects.html'" class="bg-green-500 px-4 py-2 rounded mb-4">Open Projects Page</button>
+
+    <div id="output" class="font-mono text-sm"></div>
+
+    <script>
+        function log(msg, type = 'info') {
+            const colors = { info: 'text-blue-400', success: 'text-green-400', error: 'text-red-400' };
+            document.getElementById('output').innerHTML += `<div class="${colors[type]}">${msg}</div>`;
+        }
+
+        async function runDiagnostics() {
+            document.getElementById('output').innerHTML = '';
+            log('=== PROJECTS PAGE DIAGNOSTICS ===', 'info');
+            log('');
+
+            // Test 1: Check if projects.html exists
+            log('1. Checking if projects.html exists...');
+            try {
+                const res = await fetch('projects.html');
+                if (res.ok) {
+                    log('✓ projects.html found', 'success');
+                    const html = await res.text();
+
+                    // Check for key elements
+                    if (html.includes('repos-grid')) log('✓ repos-grid element found', 'success');
+                    else log('✗ repos-grid element NOT found', 'error');
+
+                    if (html.includes('loadRepos')) log('✓ loadRepos function found', 'success');
+                    else log('✗ loadRepos function NOT found', 'error');
+
+                    if (html.includes('FALLBACK_REPOS')) log('✓ FALLBACK_REPOS data found', 'success');
+                    else log('✗ FALLBACK_REPOS data NOT found', 'error');
+
+                } else {
+                    log('✗ projects.html not accessible', 'error');
+                }
+            } catch(e) {
+                log('✗ Error loading projects.html: ' + e.message, 'error');
+            }
+
+            log('');
+
+            // Test 2: Check GitHub API
+            log('2. Testing GitHub API...');
+            try {
+                const res = await fetch('https://api.github.com/users/Mj1031/repos?per_page=10');
+                if (res.ok) {
+                    const repos = await res.json();
+                    log(`✓ GitHub API accessible - Found ${repos.length} repos`, 'success');
+                    repos.slice(0,3).forEach(r => log(`  - ${r.name}`, 'info'));
+                } else {
+                    log(`✗ GitHub API returned status ${res.status}`, 'error');
+                }
+            } catch(e) {
+                log('✗ Cannot access GitHub API: ' + e.message, 'error');
+                log('  This is OK - fallback data should work', 'info');
+            }
+
+            log('');
+            log('=== DIAGNOSTICS COMPLETE ===', 'success');
+            log('');
+            log('Next step: Click "Open Projects Page" button above', 'info');
+        }
+
+        // Auto-run on load
+        window.onload = () => runDiagnostics();
+    </script>
+</body>
+</html>

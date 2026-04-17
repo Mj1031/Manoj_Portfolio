@@ -3,7 +3,7 @@ Welcome to the repository for my professional portfolio website! This project sh
 **Live Portfolio Link:** [Manoj Ganeshe Portfolio](https://Mj1031.github.io/Manoj_Portfolio/)
 ---
 ## 🎯 About This Project
-This portfolio serves as an interactive resume and detailed showcase of my technical and analytical capabilities. It was built to demonstrate not just my professional experience, but my commitment to clear documentation, process optimization, and driving stakeholder engagement across cross-functional teams.
+This portfolio serves as an interactive resume and detailed showcase of my technical and analytical capabilities. It was built to demonstrate not just my professional experience, but my commitment to technology and AI.
 ### Key Sections:
 - **Experience:** A detailed breakdown of my roles aligning business goals with technology teams at the State of Florida (AHCA), University of New Haven, and Creative Synergies Group.
 - **Projects:** Examples of real-world problem-solving, including data analytics, API security validation, and process improvement workflows.
